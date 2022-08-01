@@ -3,14 +3,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import logic.enums.Department;
-import logic.enums.Level;
-import logic.enums.Status;
-import logic.users.Student;
+import server.logic.enums.Department;
+import server.logic.enums.Level;
+import server.logic.enums.Status;
+import server.logic.users.Student;
 import org.apache.logging.log4j.*;
-import java.io.*;
 
-import static logic.data.Data.students;
+import static server.logic.data.Data.students;
 
 public class Main extends Application {
 
@@ -36,7 +35,7 @@ public class Main extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root);
 
-        primaryStage.setTitle("EDU");
+        primaryStage.setTitle("EDU-CW");
         primaryStage.setWidth(1200);
         primaryStage.setHeight(720);
         primaryStage.setScene(scene);
