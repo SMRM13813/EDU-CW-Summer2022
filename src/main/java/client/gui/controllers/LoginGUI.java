@@ -20,7 +20,9 @@ import server.logic.enums.Level;
 import server.logic.enums.Status;
 import server.logic.users.Professor;
 import server.logic.users.Student;
+import util.Config;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -121,19 +123,19 @@ public class LoginGUI implements Initializable {
         randInt = Math.abs(randInt);
         switch (randInt) {
             case 0 -> {
-                path = "src/main/resources/Data/Images/Captcha/4nv3a.jpg";
+                path = Config.getConfig().getProperty(String.class, "captcha#1");
                 capt = "4nv3a";
             }
             case 1 -> {
-                path = "src/main/resources/Data/Images/Captcha/9m4bp.jpg";
+                path = Config.getConfig().getProperty(String.class, "captcha#2");
                 capt = "9m4bp";
             }
             case 2 -> {
-                path = "src/main/resources/Data/Images/Captcha/b4t9s.jpg";
+                path = Config.getConfig().getProperty(String.class, "captcha#3");
                 capt = "b4t9s";
             }
             case 3 -> {
-                path = "src/main/resources/Data/Images/Captcha/cept6.jpg";
+                path = Config.getConfig().getProperty(String.class, "captcha#4");
                 capt = "cept6";
             }
             case 4 -> {
@@ -150,6 +152,12 @@ public class LoginGUI implements Initializable {
             }
         }
         try {
+            File file = new File(path);
+            if(file.exists()){
+                System.out.println("WOW");
+            }else{
+                System.out.println("NOW");
+            }
             Image imagec = new Image(new FileInputStream(path));
             imageCap.setImage(imagec);
         } catch (FileNotFoundException e) {

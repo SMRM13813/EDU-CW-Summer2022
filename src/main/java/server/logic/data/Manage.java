@@ -7,6 +7,9 @@ import server.logic.objects.CourseStudent;
 import server.logic.users.Professor;
 import server.logic.users.Student;
 import server.logic.users.User;
+import util.Config;
+
+import java.util.Random;
 
 public class Manage {
 
@@ -24,6 +27,40 @@ public class Manage {
         return false;
     }
 
+
+
+    public static String setCaptcha(){
+        String path = null;
+        Random random = new Random();
+
+        int randInt = random.nextInt();
+        randInt %= 7;
+        randInt = Math.abs(randInt);
+        switch (randInt) {
+            case 0 -> {
+                path = Config.getConfig().getProperty(String.class, "captcha#1");
+            }
+            case 1 -> {
+                path = Config.getConfig().getProperty(String.class, "captcha#2");
+            }
+            case 2 -> {
+                path = Config.getConfig().getProperty(String.class, "captcha#3");
+            }
+            case 3 -> {
+                path = Config.getConfig().getProperty(String.class, "captcha#4");
+            }
+            case 4 -> {
+                path = Config.getConfig().getProperty(String.class, "captcha#5");
+            }
+            case 5 -> {
+                path = Config.getConfig().getProperty(String.class, "captcha#6");
+            }
+            case 6 -> {
+                path = Config.getConfig().getProperty(String.class, "captcha#7");
+            }
+        }
+        return path;
+    }
 
     public static User getUserByUserName(String name) {
 

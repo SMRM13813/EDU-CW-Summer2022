@@ -18,4 +18,5 @@ public class Data {
     public static User selectedUser;
     public static Course selectedCourse;
     public static Request selectedRequest;
+    public static String captcha;
 }

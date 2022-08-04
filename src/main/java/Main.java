@@ -3,11 +3,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import server.Server;
 import server.logic.enums.Department;
 import server.logic.enums.Level;
 import server.logic.enums.Status;
 import server.logic.users.Student;
 import org.apache.logging.log4j.*;
+import util.Config;
+
 
 import static server.logic.data.Data.students;
 
@@ -17,14 +20,15 @@ public class Main extends Application {
     public static void main(String[] args){
 
         //Making users:
-
         Student student = new Student("salad", "1234", "asf", "asdf", "02131", "0912323",
                 "dasf@adsf", Department.MATHEMATICS, "400101231", 18.35, "Azizi", 2019,
                 "", Level.BACHELOR, Status.STUDYING, null, null);
         students.add(student);
 
         logger.info("App started");
-        launch(args);
+        //launch(args);
+        Server server = new Server(Config.getConfig().getProperty(Integer.class, "serverPort"));
+        server.start();
         logger.info("App closed");
     }
 
