@@ -20,6 +20,7 @@ public class ClientHandler {
 
     private final int clientId;
     private String clientCaptcha;
+    private String clientUsername;
 
     public ClientHandler(int id, Server server, Socket socket) {
         this.clientId = id;
@@ -75,5 +76,13 @@ public class ClientHandler {
 
     public void setClientCaptcha(String clientCaptcha) {
         this.clientCaptcha = clientCaptcha;
+    }
+
+    public String getClientUsername() {
+        return clientUsername;
+    }
+
+    public void setClientUsername(String clientUsername) {
+        this.clientUsername = clientUsername;
     }
 }

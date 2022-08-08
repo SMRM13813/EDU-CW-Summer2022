@@ -2,6 +2,7 @@ package server;
 
 import server.logic.data.Manage;
 import server.logic.enums.Status;
+import server.logic.users.Professor;
 import server.logic.users.Student;
 import server.logic.users.User;
 import server.network.ClientHandler;
@@ -84,24 +85,15 @@ public class Server {
     private void handleInitRequest(int Id, RequestFromServer request) {
         String page = (String)request.getData("page");
         boolean result = false;
-        switch (page){
-            case "login":
+        if(page.equals("login")){
+            result = true;
+            ClientHandler clientHandler =  getClientHandler(Id);
+            clientHandler.setClientUsername((String) request.getData("username"));
+        }else{
+            String name = (String)request.getData("username");
+            if(Manage.getUserByUserName(name) != null){
                 result = true;
-                break;
-            case "bachelorMainMenu":
-                String username = (String)request.getData("username");
-                User user = Manage.getUserByUserName(username);
-                if(user instanceof Student){
-                    if(((Student)user).getStatus() != Status.WITHDRAW){
-                        result = true;
-                    }
-                }else{
-                    result = true;
-                }
-                break;
-            default:
-                //TODO
-                break;
+            }
         }
         sendInitResponse(Id, result, page);
     }
@@ -112,7 +104,10 @@ public class Server {
         String cap = (String) request.getData("captcha");
         ClientHandler clientHandler = getClientHandler(id);
         boolean capResult = (cap != null && cap.equals(clientHandler.getClientCaptcha()));
-        sendLoginResponse(id, result, capResult, (String)request.getData("username"));
+        User user = Manage.getUserByUserName((String) request.getData("username"));
+        boolean isStudent = user instanceof Student;
+        boolean withdraw = (result) && (user instanceof Student) && (((Student)user).getStatus() != Status.WITHDRAW);
+        sendLoginResponse(id, result, capResult, isStudent, withdraw, (String)request.getData("username"));
     }
 
     private void findClientAndSendResponse(int clientId, Response response) {
@@ -140,30 +135,97 @@ public class Server {
             case "bachelorMainMenu", "masterMainMenu", "PhDMainMenu":
                 if(result){
                     response = new Response(ResponseStatus.OK);
+                    ClientHandler clientHandler = getClientHandler(clientId);
+                    String username = clientHandler.getClientUsername();
+                    User user = Manage.getUserByUserName(username);
+                    String path = user.getImage();
+                    String userImage = Image.encode(path);
+                    response.addData("userImage", userImage);
+                    response.addData("user", user);
+                    path = Config.getConfig().getProperty(String.class, "studentHeaderImage");
+                    userImage = Image.encode(path);
+                    response.addData("headerImage", userImage);
+                    path = Config.getConfig().getProperty(String.class, "sharifLogo");
+                    userImage = Image.encode(path);
+                    response.addData("sharifLogo", userImage);
+                    path = Config.getConfig().getProperty(String.class, "mainImage");
+                    userImage = Image.encode(path);
+                    response.addData("mainImage", userImage);
                 }else{
                     response = new Response(ResponseStatus.ERROR);
-                    response.setErrorMessage(Config.getConfig().getProperty(String.class, "withdrawError"));
+                    response.setErrorMessage(Config.getConfig().getProperty(String.class, "userNotFoundError"));
+                }
+                break;
+            case "professorMainMenu", "DOFMainMenu":
+                if(result){
+
+                    response = new Response(ResponseStatus.OK);
+                    ClientHandler clientHandler = getClientHandler(clientId);
+                    String username = clientHandler.getClientUsername();
+                    User user = Manage.getUserByUserName(username);
+                    String path = user.getImage();
+                    String userImage = Image.encode(path);
+                    response.addData("userImage", userImage);
+                    response.addData("user", user);
+                    path = Config.getConfig().getProperty(String.class, "professorHeaderImage");
+                    userImage = Image.encode(path);
+                    response.addData("headerImage", userImage);
+                    path = Config.getConfig().getProperty(String.class, "sharifLogo");
+                    userImage = Image.encode(path);
+                    response.addData("sharifLogo", userImage);
+                    path = Config.getConfig().getProperty(String.class, "mainImage");
+                    userImage = Image.encode(path);
+                    response.addData("mainImage", userImage);
+                }else{
+                    response = new Response(ResponseStatus.ERROR);
+                    response.setErrorMessage(Config.getConfig().getProperty(String.class, "userNotFoundError"));
                 }
                 break;
             default:
+                //TODO
                 break;
         }
         findClientAndSendResponse(clientId, response);
     }
 
-    private void sendLoginResponse(int clientId, boolean result, boolean capResult, String username) {
+    private void sendLoginResponse(int clientId, boolean result, boolean capResult, boolean isStudent, boolean withdraw, String username) {
         Response response = null;
 
         if (result) {
             if(capResult) {
-                User user = Manage.getUserByUserName(username);
-                if(user != null){
-                    if(user.getLastEntered() != null && ChronoUnit.HOURS.between(LocalDateTime.parse(user.getLastEntered()), LocalDateTime.now()) > 2){
-                        response = new Response(ResponseStatus.OK);
-                    }else{
-                        response = new Response(ResponseStatus.CHANGE_PASSWORD);
+                if(isStudent) {
+                    if (withdraw) {
+                        User user = Manage.getUserByUserName(username);
+                        if (user != null) {
+                            if (user.getLastEntered() != null && ChronoUnit.HOURS.between(LocalDateTime.parse(user.getLastEntered()), LocalDateTime.now()) > 2) {
+                                response = new Response(ResponseStatus.CHANGE_PASSWORD);
+                            } else {
+                                response = new Response(ResponseStatus.OK);
+                                response.addData("student", true);
+                                String level = ((Student)user) .getLevel().toString();
+                                response.addData("level", level.toLowerCase());
+
+                            }
+                            response.addData("username", username);
+                        }
+                    } else {
+                        response = new Response(ResponseStatus.ERROR);
+                        String message = Config.getConfig().getProperty(String.class, "withdrawError");
+                        response.setErrorMessage(message);
                     }
-                    response.addData("username", username);
+                }else{
+                    User user = Manage.getUserByUserName(username);
+                    if (user != null) {
+                        if (user.getLastEntered() != null && ChronoUnit.HOURS.between(LocalDateTime.parse(user.getLastEntered()), LocalDateTime.now()) > 2) {
+                            response = new Response(ResponseStatus.CHANGE_PASSWORD);
+                        } else {
+                            response = new Response(ResponseStatus.OK);
+                            response.addData("student", false);
+                            boolean isDOF = ((Professor)user).isDeanOfFaculty();
+                            response.addData("isDOF", isDOF);
+                        }
+                        response.addData("username", username);
+                    }
                 }
             }else{
                 response = new Response(ResponseStatus.ERROR);
