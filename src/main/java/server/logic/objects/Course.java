@@ -3,6 +3,7 @@ package server.logic.objects;
 import server.logic.data.Manage;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -12,6 +13,8 @@ public class Course {
     private String name;
     private String courseCode;
     private int units;
+    private int capacity;
+    private ArrayList<String> TAs;
     private Department department;
     private String teacher;
     private String teacherName;

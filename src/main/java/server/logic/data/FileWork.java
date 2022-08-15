@@ -3,7 +3,7 @@ package server.logic.data;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import server.logic.objects.Course;
+import shared.model.objects.Course;
 import server.logic.objects.GradeRequest;
 import server.logic.users.Professor;
 import server.logic.users.Student;

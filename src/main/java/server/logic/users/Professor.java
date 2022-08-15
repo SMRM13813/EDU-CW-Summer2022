@@ -1,11 +1,11 @@
 package server.logic.users;
 
-import server.logic.enums.Degree;
-import server.logic.enums.Department;
-import server.logic.objects.Course;
-import server.logic.objects.Request;
+import shared.model.enums.Degree;
+import shared.model.enums.Department;
+import shared.model.objects.Request;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Professor extends User {
@@ -22,7 +22,7 @@ public class Professor extends User {
     public Professor(String userName, String passWord, String name, String lastName, String nationalCode,
                      String phoneNumber, String email, Department department, String image,
                      String professorCode, int roomNumber, Degree degree, boolean deanOfFaculty,
-                     boolean principle, List<Course> courseList) throws FileNotFoundException {
+                     boolean principle, ArrayList<String> courseList) throws FileNotFoundException {
         super(userName, passWord, name, lastName, nationalCode, phoneNumber, email, department, image, courseList);
         this.professorCode = professorCode;
         this.roomNumber = roomNumber;
@@ -50,6 +50,10 @@ public class Professor extends User {
 
     public String getDegree() {
         return degree.toString();
+    }
+
+    public Degree getDegreer(){
+        return degree;
     }
 
     public void setDegree(Degree degree) {

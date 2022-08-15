@@ -1,12 +1,12 @@
 package server.logic.users;
 
-import server.logic.enums.Department;
-import server.logic.enums.Level;
-import server.logic.enums.Status;
-import server.logic.objects.Course;
-import server.logic.objects.CourseStudent;
-import server.logic.objects.Request;
+import shared.model.enums.Department;
+import shared.model.enums.Level;
+import shared.model.enums.Status;
+import shared.model.objects.CourseStudent;
+import shared.model.objects.Request;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Student extends User {
@@ -32,7 +32,7 @@ public class Student extends User {
     public Student(String userName, String passWord, String name, String lastName, String nationalCode,
                    String phoneNumber, String email, Department department, String studentNumber,
                    double averageGrade, String supervisor, int entryYear, String image, Level level,
-                   Status status, List<Course> courseList, List<CourseStudent> courseStudentList) {
+                   Status status, ArrayList<String> courseList, List<CourseStudent> courseStudentList) {
         super(userName, passWord, name, lastName, nationalCode, phoneNumber, email, department, image, courseList);
         this.studentNumber = studentNumber;
         this.averageGrade = averageGrade;
@@ -152,5 +152,7 @@ public class Student extends User {
     public void setRequestRecommends(List<Request> requestRecommends) {
         this.requestRecommends = requestRecommends;
     }
+
+
 }
 

@@ -1,6 +1,6 @@
 package server.logic.data;
 
-import server.logic.objects.Course;
+import shared.model.objects.Course;
 import server.logic.objects.GradeRequest;
 import server.logic.objects.Request;
 import server.logic.users.Professor;

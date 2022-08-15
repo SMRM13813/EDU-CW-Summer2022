@@ -4,7 +4,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import server.Server;
 import shared.request.RequestFromServer;
 import shared.response.Response;
-import util.Jackson;
+import shared.util.Jackson;
 
 import java.io.IOException;
 import java.io.PrintStream;

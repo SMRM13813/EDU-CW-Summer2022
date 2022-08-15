@@ -1,9 +1,8 @@
 package server.logic.users;
 
-import server.logic.enums.Department;
-import server.logic.objects.Course;
+import shared.model.enums.Department;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 public class User {
@@ -17,14 +16,14 @@ public class User {
     private Department department;
     private String image;
     String lastEntered;
-    private List<Course> courseList;
+    private ArrayList<String> courseList;
 
     public User() {
 
     }
 
     public User(String userName, String passWord, String name, String lastName, String nationalCode,
-                String phoneNumber, String email, Department department, String image, List<Course> courseList) {
+                String phoneNumber, String email, Department department, String image, ArrayList<String> courseList) {
 
         this.userName = userName;
         this.passWord = passWord;
@@ -119,11 +118,11 @@ public class User {
         this.lastEntered = lastEntered;
     }
 
-    public List<Course> getCourseList() {
+    public ArrayList<String> getCourseList() {
         return courseList;
     }
 
-    public void setCourseList(List<Course> courseList) {
+    public void setCourseList(ArrayList<String> courseList) {
         this.courseList = courseList;
     }
 
