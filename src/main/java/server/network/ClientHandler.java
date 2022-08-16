@@ -21,8 +21,10 @@ public class ClientHandler {
     private final int clientId;
     private String clientCaptcha;
     private String clientUsername;
+    private String token;
 
-    public ClientHandler(int id, Server server, Socket socket) {
+    public ClientHandler(String token, int id, Server server, Socket socket) {
+        this.token = token;
         this.clientId = id;
         this.server = server;
 
@@ -53,7 +55,7 @@ public class ClientHandler {
     }
 
     private void handleRequest(RequestFromServer request) {
-        server.handleRequest(clientId, request);
+        server.handleRequest(token, clientId, request);
     }
 
     public void sendResponse(Response response) {
@@ -80,6 +82,10 @@ public class ClientHandler {
 
     public String getClientUsername() {
         return clientUsername;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public void setClientUsername(String clientUsername) {
